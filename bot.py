@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-import shareithub
+import 
 import sys
 import asyncio
 from shareithub import shareithub
@@ -27,7 +27,7 @@ def display_header():
     print(Style.BRIGHT + Fore.CYAN + border + "\n")
     # Mempertahankan header lama agar tidak menghapus apapun
     print(Style.BRIGHT + Fore.CYAN + "======================================")
-    print(Style.BRIGHT + Fore.CYAN + " AUTO TX MONAD BY SHARE IT HUB        ")
+    print(Style.BRIGHT + Fore.CYAN + "         AUTO SWAP TESTING            ")
     print(Style.BRIGHT + Fore.CYAN + "====================================\n")
 
 shareithub()
