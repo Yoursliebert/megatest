@@ -58,7 +58,7 @@ def get_random_delay():
 def wrap_mon(amount):
     try:
         print(Fore.BLUE + "🪫 Starting Bebop ⏩⏩⏩⏩")
-        print(Fore.MAGENTA + f"🔄 Wrapping {w3.from_wei(amount, 'ether')} MON to WMON")
+        print(Fore.MAGENTA + f"🔄 Wrapping {w3.from_wei(amount, 'ether')} ETH to WETH")
         nonce = w3.eth.get_transaction_count(account.address)
         tx = contract.functions.deposit().build_transaction({
             'from': account.address,
@@ -69,7 +69,7 @@ def wrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Successfully wrapped MON to WMON")
+        print(Fore.GREEN + "✅ Successfully wrapped ETH to WETH")
         print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {tx_hash.hex()}")
         # Mengganti waitForTransactionReceipt dengan wait_for_transaction_receipt
         w3.eth.wait_for_transaction_receipt(tx_hash)
@@ -88,7 +88,7 @@ def unwrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Successfully unwrapped WMON to MON")
+        print(Fore.GREEN + "✅ Successfully unwrapped WETH to ETH")
         print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {tx_hash.hex()}")
         # Mengganti waitForTransactionReceipt dengan wait_for_transaction_receipt
         w3.eth.wait_for_transaction_receipt(tx_hash)
