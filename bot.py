@@ -2,6 +2,7 @@
 import os
 import sys
 import asyncio
+import random
 from asyncio.subprocess import PIPE
 from subprocess import CalledProcessError
 from colorama import init, Fore, Style
@@ -64,51 +65,72 @@ async def run_scripts_per_account(accounts, loop_count, selected_scripts):
                     print(Fore.RED + f"⚠️ Melewati {script['name']} karena error")
 
 async def main():
-    os.system('cls' if os.name == 'nt' else 'clear')
-    display_header()
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        display_header()
 
-    # Load akun dari accounts.txt
-    if not os.path.exists("accounts.txt"):
-        print(Fore.RED + "File 'accounts.txt' tidak ditemukan.")
-        sys.exit(1)
-    with open("accounts.txt", "r") as f:
-        accounts = [line.strip() for line in f if line.strip()]
+        # Load akun dari file
+        if not os.path.exists("accounts.txt"):
+            print(Fore.RED + "File 'accounts.txt' tidak ditemukan.")
+            sys.exit(1)
+        with open("accounts.txt", "r") as f:
+            accounts = [line.strip() for line in f if line.strip()]
 
-    print(Fore.BLUE + Style.BRIGHT + "\n🚀 Jalankan Modul Auto\n")
-    print(Fore.CYAN + "-" * 80)
-    print("Pilih modul yang ingin dijalankan (misal: 1,2,3). Kosong = semua modul.\n")
-    for idx, script in enumerate(scripts, start=1):
-        print(f"{Fore.YELLOW}{idx}. {Fore.WHITE}{script['name']}")
-    print(Fore.CYAN + "-" * 80)
-
-    selection = input(Fore.CYAN + "\nMasukkan nomor modul (default semua): ").strip()
-    if selection == "":
-        selected_modules = scripts
-    else:
-        try:
-            indices = [int(x.strip()) for x in selection.split(",") if x.strip().isdigit()]
-            selected_modules = [scripts[i - 1] for i in indices if 1 <= i <= len(scripts)]
-            if not selected_modules:
-                selected_modules = scripts
-        except Exception:
+        # Pilih modul
+        print(Fore.BLUE + Style.BRIGHT + "\n🚀 Jalankan Modul Auto\n")
+        for idx, script in enumerate(scripts, start=1):
+            print(f"{Fore.YELLOW}{idx}. {Fore.WHITE}{script['name']}")
+        selection = input(Fore.CYAN + "\nMasukkan nomor modul (default semua): ").strip()
+        if selection == "":
             selected_modules = scripts
+        else:
+            try:
+                indices = [int(x.strip()) for x in selection.split(",") if x.strip().isdigit()]
+                selected_modules = [scripts[i - 1] for i in indices if 1 <= i <= len(scripts)]
+                if not selected_modules:
+                    selected_modules = scripts
+            except:
+                selected_modules = scripts
 
-    loop_count_str = input(Fore.CYAN + "\nBerapa kali ingin menjalankan per akun? (default 1): ").strip()
-    try:
-        loop_count = int(loop_count_str) if loop_count_str else 1
-        if loop_count <= 0:
-            print(Fore.RED + "Angka harus lebih dari 0. Gunakan default 1.")
+        # Jumlah loop per akun
+        loop_count_str = input(Fore.CYAN + "\nBerapa kali ingin menjalankan per akun? (default 1): ").strip()
+        try:
+            loop_count = int(loop_count_str) if loop_count_str else 1
+            if loop_count <= 0:
+                print(Fore.RED + "Angka harus lebih dari 0. Gunakan default 1.")
+                loop_count = 1
+        except:
             loop_count = 1
-    except:
-        loop_count = 1
+        
 
-    print(Fore.GREEN + f"\n🚀 Memulai {len(selected_modules)} modul × {loop_count} loop per {len(accounts)} akun\n")
-    await run_scripts_per_account(accounts, loop_count, selected_modules)
+        # Jalankan modul
+        print(Fore.GREEN + f"\n🚀 Menjalankan modul x{loop_count} untuk {len(accounts)} akun\n")
+        await run_scripts_per_account(accounts, loop_count, selected_modules)
+        delay_hours = random.randint(1, 4)
+        delay_seconds = delay_hours * 3600
 
-    print(Fore.GREEN + Style.BRIGHT + "\n✅✅ Semua akun & modul selesai dijalankan! ✅✅\n")
-    print(Fore.MAGENTA + "*" * 80)
-    print(Fore.MAGENTA + "Terima kasih telah menggunakan script ini!".center(80))
-    print(Fore.MAGENTA + "*" * 80 + "\n")
+        print(Fore.CYAN + f"\n⏳ Menunggu {delay_hours} jam sebelum mengulang loop...\n")
+
+        while delay_seconds > 0:
+            hrs, rem = divmod(delay_seconds, 3600)
+            mins, secs = divmod(rem, 60)
+            time_str = f"{hrs:02d}:{mins:02d}:{secs:02d}"
+            print(Fore.YELLOW + f"⏱  Delay: {time_str}", end='\r')
+            await asyncio.sleep(1)
+            delay_seconds -= 1
+
+        print(Fore.GREEN + Style.BRIGHT + "\n✅ Semua akun & modul selesai dijalankan!\n")
+        print(Fore.MAGENTA + "Menunggu selama {} jam sebelum mengulang otomatis...\n".format(delay_hours))
+
+        # Delay perulangan otomatis (dalam detik)
+        for remaining in range(delay_hours * 3600, 0, -1):
+            sys.stdout.write(f"\r⏳ Menunggu {remaining//60} menit {remaining%60} detik... ")
+            sys.stdout.flush()
+            await asyncio.sleep(1)
+
+        # Lanjut loop otomatis tanpa tanya ulang
+
+
 
 if __name__ == '__main__':
     try:
