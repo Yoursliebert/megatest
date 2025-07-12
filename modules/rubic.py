@@ -17,8 +17,8 @@ def displayHeader():
 load_dotenv()
 displayHeader()
 
-RPC_URL = "https://testnet-rpc.monad.xyz/"
-EXPLORER_URL = "https://testnet.monadexplorer.com/tx/"
+RPC_URL = ""
+EXPLORER_URL = "/"
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 if not PRIVATE_KEY:
     print(Fore.RED + "❌ Private key tidak ditemukan!")
