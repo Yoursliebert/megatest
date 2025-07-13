@@ -21,7 +21,7 @@ cd megatest
 ```
 6.
 ```
-nano .env
+nano accounts.txt
 ```
 
 7.
