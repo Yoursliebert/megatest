@@ -16,7 +16,8 @@ sudo apt install python3-venv -y
 ```
 5.
 ```
-git clone https://github.com/Yoursliebert/megatest cd megatest
+git clone https://github.com/Yoursliebert/megatest.git
+cd megatest
 ```
 6.
 ```
